@@ -8,7 +8,6 @@ Usage:
 
 import math
 import os
-import random
 import threading
 import time
 
@@ -23,6 +22,7 @@ import moviepy.editor as mp
 import utils
 from rife_model import load_rife_model, rife_inference_with_latents
 from huggingface_hub import hf_hub_download, snapshot_download
+import secrets
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -122,7 +122,7 @@ def infer(
     progress=gr.Progress(track_tqdm=True),
 ):
     if seed == -1:
-        seed = random.randint(0, 2**8 - 1)
+        seed = secrets.SystemRandom().randint(0, 2**8 - 1)
     video_pt = pipe(
         prompt=prompt,
         num_videos_per_prompt=1,
