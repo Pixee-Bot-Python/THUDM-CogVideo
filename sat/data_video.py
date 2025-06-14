@@ -5,7 +5,6 @@ from functools import partial
 import math
 import torchvision.transforms as TT
 from sgm.webds import MetaDistributedWebDataset
-import random
 from fractions import Fraction
 from typing import Union, Optional, Dict, Any, Tuple
 from torchvision.io.video import av
@@ -18,6 +17,7 @@ from torchvision.transforms import InterpolationMode
 import decord
 from decord import VideoReader
 from torch.utils.data import Dataset
+import secrets
 
 
 def read_video(
@@ -174,7 +174,7 @@ def load_video(
         ori_vlen = min(int(duration * actual_fps) - 1, len(vr))
 
     max_seek = int(ori_vlen - skip_frms_num - num_frames / wanted_fps * actual_fps)
-    start = random.randint(skip_frms_num, max_seek + 1)
+    start = secrets.SystemRandom().randint(skip_frms_num, max_seek + 1)
     end = int(start + num_frames / wanted_fps * actual_fps)
     n_frms = num_frames
 
@@ -333,7 +333,7 @@ class VideoDataset(MetaDistributedWebDataset):
         **kwargs,
     ):
         if seed == -1:
-            seed = random.randint(0, 1000000)
+            seed = secrets.SystemRandom().randint(0, 1000000)
         if meta_names is None:
             meta_names = []
 
